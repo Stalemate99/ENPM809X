@@ -5,6 +5,7 @@ This repository contains all content discussed in class.
 ## Projects ⚒️
 
 - Project 1
+- Project 2
 
 ## Home works 🏡
 
