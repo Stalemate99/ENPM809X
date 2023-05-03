@@ -53,23 +53,32 @@ def CRP(graph: ContactGraph, curr_contact: ContactNode, final_contact: ContactNo
     contact_plan = graph.plan
 
     for _, contact in contact_plan.items():
+      # Checking for possible neighbouring contacts
       if curr_contact.dst == contact.src:
         if contact.end <= curr_contact.arr_time or contact.dst in curr_contact.visited_nodes:
           continue
+
+        # Trying tro relax the arrival time of neighbours
         if contact.start < curr_contact.arr_time:
           arr_time = curr_contact.arr_time + contact.owlt
         else:
           arr_time = contact.start + contact.owlt
 
+        # If calculated arrival time is lesser than the existing arrival time,
+        # update the contact with new arrival time
         if arr_time < contact.arr_time:
           contact.arr_time = arr_time
           contact.pred = curr_contact
           curr_contact.visited_nodes.add(contact.src)
           contact.visited_nodes = curr_contact.visited_nodes
+
+          # If next contact has the destination node with better BDT,
+          # return the final contact and updated BDT
           if contact.dst == final_dest and contact.arr_time < bdt:
             bdt = contact.arr_time
             final_contact = contact
 
+    # Mark the current node as visited for future reference
     curr_contact.visited = True
     return final_contact, bdt
 
