@@ -5,6 +5,7 @@ from ContactNode import ContactNode
 class ContactGraph:
   def __init__(self, plan: ContactNode = defaultdict()) -> None:
     self.plan = plan
+    self.priority_queue = None
 
   def get_record(self, id: int) -> ContactNode:
     return self.plan[id]
