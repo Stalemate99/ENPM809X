@@ -2,6 +2,7 @@ from typing import List
 
 from ContactGraph import ContactGraph
 from ContactNode import ContactNode
+from MinHeap import MinHeap
 
 """
 Contact Graph Route
@@ -26,7 +27,12 @@ def CGR(graph: ContactGraph, root: ContactNode, dest: int):
         final_contact, bdt = CRP(graph, curr_contact, final_contact, bdt, dest)
 
         # Selecting the next neightbour with the smallest arrival time
-        curr_contact = CSP(graph, bdt)
+
+        # Linear algorithm discussed in the paper
+        # curr_contact = CSP(graph, bdt)
+
+        # Pop the contact with the minimum arrival time
+        curr_contact = graph.priority_queue.extract_min()
 
         # Exit condition
         if not curr_contact:
@@ -51,6 +57,8 @@ bdt
 """
 def CRP(graph: ContactGraph, curr_contact: ContactNode, final_contact: ContactNode, bdt: float, final_dest: int):
     contact_plan = graph.plan
+    # Initialize priority queue containing current neighbours
+    graph.priority_queue = MinHeap()
 
     for _, contact in contact_plan.items():
       # Checking for possible neighbouring contacts
@@ -71,6 +79,8 @@ def CRP(graph: ContactGraph, curr_contact: ContactNode, final_contact: ContactNo
           contact.pred = curr_contact
           curr_contact.visited_nodes.add(contact.src)
           contact.visited_nodes = curr_contact.visited_nodes
+          # Inserting into the priority queue
+          graph.priority_queue.insert(contact)
 
           # If next contact has the destination node with better BDT,
           # return the final contact and updated BDT
@@ -85,6 +95,7 @@ def CRP(graph: ContactGraph, curr_contact: ContactNode, final_contact: ContactNo
 """
 Contact Selection Procedure
 Find the next shortest contact that is not part of the visited contacts
+Linear Search Algorithm
 
 params
 graph - Contact Graph's plan
